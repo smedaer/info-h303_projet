@@ -1,0 +1,6 @@
+//things to do for project BDD (deadline:13 mai)
+-script SQL DLL
+-script import XML in SQL
+-interface graphique PHP (voir cahier des charges dans énoncé)
+-rapport (voir cahier des charges dans énoncé) + requêtes traduction
+-ajouts supp (note départ 16/20)
