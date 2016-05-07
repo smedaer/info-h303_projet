@@ -11,7 +11,7 @@ http://www.it-connect.fr/installer-un-serveur-lamp-linux-apache-mysql-php/
 /var/www
 
 //to make it work on ubuntu machine, change the /var/www/php content
-//with index.html file, and import the BDD (script SQL DLL and XML files)
+//with index.html file, and import the BDD (script SQL DDL and XML files)
 //then to acces the web page, open browser and put one of the following address:
 //1)http://127.0.0.1
 //2)http://localhost
