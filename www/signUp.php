@@ -1,9 +1,14 @@
 <?php
 
-$error = false;
+include "header.php";
+include "connection.php";
+
+$date = isset($_POST['date']) ? $_POST['password'] : null;
+$name = isset($_POST['name']) ? $_POST['name'] : null;
 $email = isset($_POST['email']) ? $_POST['email'] : null;
 $password = isset($_POST['password']) ? $_POST['password'] : null;
 $password_repeated = isset($_POST['password_repeated']) ? $_POST['password_repeated'] : null;
+$error = false;
 
 if ($password !== $password_repeated) {
     $password = null;
@@ -14,23 +19,22 @@ if ($password !== $password_repeated) {
 if ($email === null) {
     $error = true;
 } else {
-    $statement = $db->prepare("SELECT count(*) AS NbEmail FROM user WHERE email = :email");
+    $statement = $db->prepare("SELECT count(*) AS NbEmail FROM Users WHERE Email = :email");
     $statement->execute(array("email" => $email));
     $res = $statement->fetch(PDO::FETCH_ASSOC);
     if ($res['NbEmail'] > 0) {
         $error = true;
+        echo "Error: Cet email est deja utilise!"; // met le msg en haut de la page ...
     }
 }
 
-
 if (!$error) {
-    $statement = $db->prepare("INSERT INTO user (email, password) VALUES (:email, :password)");
-    $statement->execute(array("email" => $email, "password" => $password));
+    $statement = $db->prepare("INSERT INTO Users (Email, PSWD, Creation_Date, Admin, Name) VALUES (:email, :password, :Creation_Date, :Admin, :Name)");
+    $statement->execute(array("email" => $email, "password" => $password, "Creation_Date" => (new Datetime())->format('Y-m-d H:i:s'), "Admin" => false, "Name" => $name));
     header("Location: index.php");
 }
 ?>
 
-<?php include "header.php"; ?>
 <div class="row">
     <form action="signUp.php" method="post">
 
@@ -40,6 +44,14 @@ if (!$error) {
             </label>
             <div class="col-md-9">
                 <input type="email" class="form-control" name="email" placeholder="Adresse email" value="<?php echo $email ?>" required autofocus>
+            </div>
+        </div>
+        <div class="col-md-12 form-group">
+            <label for="name" class="control-label col-md-3 required">
+                Nom
+            </label>
+            <div class="col-md-9">
+                <input type="name" class="form-control" name="name" placeholder="Nom" value="<?php echo $name ?>" required autofocus>
             </div>
         </div>
         <div class="col-md-12 form-group">
@@ -59,7 +71,7 @@ if (!$error) {
             </div>
         </div>
         <div class="col-md-12">
-            <div class="col-md-3 col-md-offset-6">
+            <div class="col-md-3 col-md-offset-5">
                 <input type="submit" class="btn btn-success" value="Sauver">
             </div>
         </div>

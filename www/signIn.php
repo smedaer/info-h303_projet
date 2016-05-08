@@ -1,4 +1,7 @@
 <?php
+include "header.php";
+include "connection.php";
+
 $error = false;
 $email = isset($_POST['email']) ? $_POST['email'] : null;
 $password = isset($_POST['password']) ? $_POST['password'] : null;
@@ -6,24 +9,33 @@ $password = isset($_POST['password']) ? $_POST['password'] : null;
 if ($email === null) {
     $error = true;
 } else {
-    $statement = $db->prepare("SELECT count(*) AS NbEmail FROM user WHERE email = :email");
+    $statement = $db->prepare("SELECT User_ID,Name,PSWD FROM Users WHERE Email = :email");
     $statement->execute(array("email" => $email));
-    $res = $statement->fetch(PDO::FETCH_ASSOC);
-    if ($res['NbEmail'] > 0) {
+    $res = $statement->fetchAll(PDO::FETCH_ASSOC);
+    if (count($res) != 1) {
         $error = true;
+        echo "Error: Cet email n'appartient a aucun compte!";
     }
+    else {
+        if ($password != $res[0]["PSWD"]){
+            $error = true;
+            echo "Error: Mot de passe incorrect!";
+        }
+    }
+    if (!$error) {
+        // connection
+        $_SESSION["ID"] = $res[0]["User_ID"];
+        $_SESSION["Name"] = $res[0]["Name"];
+        $_SESSION["Email"] = $email;
+        header("Location: index.php");
+}
 }
 
-if (!$error) {
-    $statement = $db->prepare("INSERT INTO user (email, password) VALUES (:email, :password)");
-    $statement->execute(array("email" => $email, "password" => $password));
-    header("Location: index.php");
-}
+
 ?>
 
-<?php include "header.php"; ?>
 <div class="row">
-    <form action="register.php" method="post">
+    <form action="signIn.php" method="post">
 
         <div class="col-md-12 form-group">
             <label for="email" class="control-label col-md-3">
@@ -42,7 +54,7 @@ if (!$error) {
             </div>
         </div>
         <div class="col-md-12">
-            <div class="col-md-3 col-md-offset-6">
+            <div class="col-md-3 col-md-offset-5">
                 <input type="submit" class="btn btn-success" value="Sauver">
             </div>
         </div>
