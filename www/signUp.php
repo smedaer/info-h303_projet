@@ -29,12 +29,22 @@ if ($email === null) {
 }
 
 if (!$error) {
+    //sign up
     $statement = $db->prepare("INSERT INTO Users (Email, PSWD, Creation_Date, Admin, Name) VALUES (:email, :password, :Creation_Date, :Admin, :Name)");
     $statement->execute(array("email" => $email, "password" => $password, "Creation_Date" => (new Datetime())->format('Y-m-d H:i:s'), "Admin" => false, "Name" => $name));
+
+    //connection
+    $statement = $db->prepare("SELECT User_ID FROM Users WHERE Email = :email");
+    $statement->execute(array("email" => $email));
+    $res = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $_SESSION["ID"] = $res[0]["User_ID"];
+    $_SESSION["Name"] = $name;
+    $_SESSION["Email"] = $email;
     header("Location: index.php");
 }
 ?>
 <body class="signUpPage">
+<br><br><br><br><br>
 <div class="row">
     <form action="signUp.php" method="post">
 
