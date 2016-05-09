@@ -34,12 +34,12 @@ if ($email === null) {
 
 ?>
 <body class="signInPage">
-
+<br><br><br><br><br>
 <div class="row">
     <form action="signIn.php" method="post">
         <div class="col-md-9 col-md-offset-3 form-group">
             <label for="email" class="control-label col-md-3">
-                Email
+                <p style="color:white">Email</p>
             </label>
             <div class="col-md-5">
                 <input type="email" class="form-control" size="5" name="email" placeholder="Adresse email" value="<?php echo $email ?>" required autofocus>
@@ -47,7 +47,7 @@ if ($email === null) {
         </div>
         <div class="col-md-9 col-md-offset-3 form-group">
             <label for="password" class="control-label col-md-3">
-                Mot de passe
+                <p style="color:white">Mot de passe</p>
             </label>
             <div class="col-md-5">
                 <input type="password" class="form-control" name="password" placeholder="Mot de passe" value="<?php echo $password ?>" required>
