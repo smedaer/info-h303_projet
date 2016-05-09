@@ -36,8 +36,8 @@ if (!$error) {
     //connection
     $statement = $db->prepare("SELECT User_ID FROM Users WHERE Email = :email");
     $statement->execute(array("email" => $email));
-    $res = $statement->fetchAll(PDO::FETCH_ASSOC);
-    $_SESSION["ID"] = $res[0]["User_ID"];
+    $res = $statement->fetch(PDO::FETCH_ASSOC);
+    $_SESSION["ID"] = $res["User_ID"];
     $_SESSION["Name"] = $name;
     $_SESSION["Email"] = $email;
     header("Location: index.php");
