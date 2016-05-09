@@ -7,17 +7,17 @@ session_start();
     <meta charset="UTF-8">
     <title>Horeca</title>
     <link rel="stylesheet" href="style/boostrap.min.css">
-    <link rel="stylesheet" href="style/custom.css">
+    <link rel="stylesheet" href="style/style.css">
 </head>
-<body>
+
 <nav class="navbar navbar-default">
-    <?-- en-tête -->
+    <?-- en-tête --?>
     <div class="row">
-        <div class="col-md-2"></div> <?-- décalage -->
+        <div class="col-md-2"></div> <?-- décalage --?>
         <div class="col-md-6">
             <a href="/Horeca">
             <img src="Images\logo.png" alt="Horeca"><br>
-            </a> <?-- permet de revenir à l accueil en cliquant sur l img -->
+            </a> <?-- permet de revenir à l accueil en cliquant sur l img --?>
         </div>
         <div class="col-md-3">
             <?php if(!isset($_SESSION["ID"])){ ?>
@@ -37,3 +37,4 @@ session_start();
     </div>
 </nav>
 <div class="container">
+

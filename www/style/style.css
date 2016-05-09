@@ -1,0 +1,22 @@
+body {
+    background-image:url(../Images/fond.jpg);
+    background-repeat:no-repeat;
+    background-position:50% 0%;
+}
+
+body.signInPage {
+    background-image:url(../Images/signIn.jpg);
+    background-repeat:no-repeat;
+    background-position:50% 18%;
+}
+
+body.signUpPage {
+    background-image:url(../Images/signUp.jpg);
+    background-repeat:no-repeat;
+    background-position:40% 30%;
+}
+
+label.required::after{
+    content: " *";
+    color: #E23033;
+}

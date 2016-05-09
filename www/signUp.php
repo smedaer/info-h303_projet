@@ -34,7 +34,7 @@ if (!$error) {
     header("Location: index.php");
 }
 ?>
-
+<body class="signUpPage">
 <div class="row">
     <form action="signUp.php" method="post">
 
@@ -42,7 +42,7 @@ if (!$error) {
             <label for="email" class="control-label col-md-3 required">
                 Email
             </label>
-            <div class="col-md-9">
+            <div class="col-md-5">
                 <input type="email" class="form-control" name="email" placeholder="Adresse email" value="<?php echo $email ?>" required autofocus>
             </div>
         </div>
@@ -50,7 +50,7 @@ if (!$error) {
             <label for="name" class="control-label col-md-3 required">
                 Nom
             </label>
-            <div class="col-md-9">
+            <div class="col-md-5">
                 <input type="name" class="form-control" name="name" placeholder="Nom" value="<?php echo $name ?>" required autofocus>
             </div>
         </div>
@@ -58,7 +58,7 @@ if (!$error) {
             <label for="password" class="control-label col-md-3 required">
                 Mot de passe
             </label>
-            <div class="col-md-9">
+            <div class="col-md-5">
                 <input type="password" class="form-control" name="password" placeholder="Mot de passe" value="<?php echo $password ?>" required>
             </div>
         </div>
@@ -66,7 +66,7 @@ if (!$error) {
             <label for="password_repeated" class="control-label col-md-3 required">
                 verification du mot de passe
             </label>
-            <div class="col-md-9">
+            <div class="col-md-5">
                 <input type="password" class="form-control" name="password_repeated" placeholder="Mot de passe" value="<?php echo $password_repeated ?>" required>
             </div>
         </div>
