@@ -4,6 +4,7 @@ include "header.php";
 include "connection.php";
 
 $actual = isset($_GET["actual"]) ? $_GET["actual"] : null;
+$newCom = isset($_POST['newCom']) ? $_POST['newCom'] : null;
 if ($actual){
     $statement = $db->prepare("SELECT AdRue,AdNumero,AdCodePostal,AdCity,Longitude,Latitude,Tel,Site,Admin FROM Etablissements WHERE Eta_ID = :Eta_ID");
     $statement->execute(array("Eta_ID" => $actual));
@@ -93,7 +94,16 @@ if ($actual){
     </thead>
     <tbody>
         <?php
-
+        if(isset($_SESSION["ID"])){?>
+            <div class='panel-default'>
+                <div class='panel-heading'>
+                    <div class='panel-title'>Ajouter un commentaire</div>
+                </div>
+                <div class='panel-body'>
+                    //
+                </div>
+            </div>
+        <?php }
         $statement = $db->prepare("SELECT Eta_ID,AdCodePostal FROM Etablissements WHERE Exists (SELECT * FROM Restaurants WHERE Rest_ID = Eta_ID)");
         $statement->execute(array());
         $index = 1;

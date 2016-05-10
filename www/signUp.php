@@ -3,7 +3,7 @@
 include "header.php";
 include "connection.php";
 
-$name = isset($_POST['name']) ? $_POST['name'] : null;
+$User_ID = isset($_POST['User_ID']) ? $_POST['User_ID'] : null;
 $email = isset($_POST['email']) ? $_POST['email'] : null;
 $password = isset($_POST['password']) ? $_POST['password'] : null;
 $password_repeated = isset($_POST['password_repeated']) ? $_POST['password_repeated'] : null;
@@ -29,15 +29,11 @@ if ($email === null) {
 
 if (!$error) {
     //sign up
-    $statement = $db->prepare("INSERT INTO Users (Email, PSWD, Creation_Date, Admin, Name) VALUES (:email, :password, :Creation_Date, :Admin, :Name)");
-    $statement->execute(array("email" => $email, "password" => $password, "Creation_Date" => (new Datetime())->format('Y-m-d H:i:s'), "Admin" => false, "Name" => $name));
+    $statement = $db->prepare("INSERT INTO Users (Email, PSWD, Creation_Date, Is_Admin, User_ID) VALUES (:email, :password, :Creation_Date, :Is_Admin, :User_ID)");
+    $statement->execute(array("email" => $email, "password" => $password, "Creation_Date" => (new Datetime())->format('Y-m-d H:i:s'), "Is_Admin" => false, "User_ID" => $User_ID));
 
     //connection
-    $statement = $db->prepare("SELECT User_ID FROM Users WHERE Email = :email");
-    $statement->execute(array("email" => $email));
-    $res = $statement->fetch(PDO::FETCH_ASSOC);
-    $_SESSION["ID"] = $res["User_ID"];
-    $_SESSION["Name"] = $name;
+    $_SESSION["User_ID"] = $User_ID;
     $_SESSION["Email"] = $email;
     header("Location: index.php");
 }
@@ -60,7 +56,7 @@ if (!$error) {
                 Nom
             </label>
             <div class="col-md-5">
-                <input type="name" class="form-control" name="name" placeholder="Nom" value="<?php echo $name ?>" required autofocus>
+                <input type="name" class="form-control" name="User_ID" placeholder="Nom" value="<?php echo $User_ID ?>" required autofocus>
             </div>
         </div>
         <div class="col-md-12 form-group">
