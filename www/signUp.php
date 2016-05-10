@@ -3,7 +3,6 @@
 include "header.php";
 include "connection.php";
 
-$date = isset($_POST['date']) ? $_POST['password'] : null;
 $name = isset($_POST['name']) ? $_POST['name'] : null;
 $email = isset($_POST['email']) ? $_POST['email'] : null;
 $password = isset($_POST['password']) ? $_POST['password'] : null;

@@ -1,5 +1,4 @@
-<?php include "header.php";
-var_dump($_SESSION);?>
+<?php include "header.php"; ?>
 <body>
     <div class="jumbotron col-md-12">
         <p align="center">Cliquez sur ce que vous recherchez</p>
