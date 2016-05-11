@@ -8,11 +8,13 @@ $email = isset($_POST['email']) ? $_POST['email'] : null;
 $password = isset($_POST['password']) ? $_POST['password'] : null;
 $password_repeated = isset($_POST['password_repeated']) ? $_POST['password_repeated'] : null;
 $error = false;
+$errorMsg = null;
 
 if ($password !== $password_repeated) {
     $password = null;
     $password_repeated = null;
     $error = true;
+    $errorMsg = "Les mots de passe ne correspondent pas";
 }
 
 if ($email === null) {
@@ -23,7 +25,7 @@ if ($email === null) {
     $res = $statement->fetch(PDO::FETCH_ASSOC);
     if ($res['NbEmail'] > 0) {
         $error = true;
-        echo "Error: Cet email est deja utilise!"; // met le msg en haut de la page ...
+        $errorMsg = "Error: Cet email est deja utilise!";
     }
 }
 
@@ -79,6 +81,7 @@ if (!$error) {
             <div class="col-md-3 col-md-offset-5">
                 <input type="submit" class="btn btn-success" value="Sauver">
             </div>
+            <font color="red"><br><br><?php echo $errorMsg; ?></font>
         </div>
     </form>
 </div>

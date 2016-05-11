@@ -47,3 +47,10 @@ button.cafes {
     font-weight: bold;
     color:white;
 }
+
+a.users {color:red;}
+a.users:link  {text-decoration: none; color: red;}
+a.users:visited {text-decoration: none; color: red;}
+a.users:hover {text-decoration: underline; color: red;}
+a.users:active {text-decoration: none; color: red;}
+

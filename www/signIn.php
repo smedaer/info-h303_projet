@@ -3,6 +3,7 @@ include "header.php";
 include "connection.php";
 
 $error = false;
+$errorMsg = null;
 $email = isset($_POST['email']) ? $_POST['email'] : null;
 $password = isset($_POST['password']) ? $_POST['password'] : null;
 
@@ -14,12 +15,12 @@ if ($email === null) {
     $res = $statement->fetchAll(PDO::FETCH_ASSOC);
     if (count($res) != 1) {
         $error = true;
-        echo "Error: Cet email n'appartient a aucun compte!";
+        $errorMsg = "Error: Cet email n'appartient a aucun compte!";
     }
     else {
         if ($password != $res[0]["PSWD"]){
             $error = true;
-            echo "Error: Mot de passe incorrect!";
+            $errorMsg = "Error: Mot de passe incorrect!";
         }
     }
     if (!$error) {
@@ -56,6 +57,7 @@ if ($email === null) {
             <div class="col-md-3 col-md-offset-5">
                 <input type="submit" class="btn btn-success" value="Sauver">
             </div>
+            <font color="red"><br><?php echo $errorMsg; ?></font>
         </div>
     </form>
 </div>

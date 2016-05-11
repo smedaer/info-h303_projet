@@ -26,7 +26,7 @@ session_start();
                 <a href="signUp.php" class="btn btn-info">sign up</a>
             <?php }
             else { ?>
-                <br> <?php echo "vous etes connectes au compte: " . $_SESSION["User_ID"]; ?> <br>
+                <br> vous etes connectes au compte: &nbsp; <?php echo  '<a class="users" href="user.php?actual='.$_SESSION["User_ID"].'">'.$_SESSION["User_ID"].'</a><br>' ?>
                 <a href="signOut.php" class="btn btn-info">sign out</a>
                 <?php } ?>
         </div>
