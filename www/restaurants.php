@@ -44,7 +44,7 @@ if ($actual){
             <div class="col-md-7">
                 <div class="panel-info">
                     <div class="panel-heading">
-                        <h2 class="panel-title"> Infos restaurant </h2>
+                        <h2 class="panel-title"> Informations sur le restaurant </h2>
                     </div>
                     <div class="panel-body">
                         Prix moyen:&nbsp; <?php echo $resRest[0]["Prix"] ?> <br>
