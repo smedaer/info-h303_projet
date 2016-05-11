@@ -16,7 +16,7 @@ session_start();
         <div class="col-md-2"></div> <?-- décalage --?>
         <div class="col-md-6">
             <a href="/Horeca">
-            <img src="Images\logo.png" alt="Horeca"><br>
+            <img src="Images/logo.png">
             </a> <?-- permet de revenir à l accueil en cliquant sur l img --?>
         </div>
         <div class="col-md-3">
@@ -26,7 +26,7 @@ session_start();
                 <a href="signUp.php" class="btn btn-info">sign up</a>
             <?php }
             else { ?>
-                <br> vous etes connectes au compte: &nbsp; <?php echo  '<a class="users" href="user.php?actual='.$_SESSION["User_ID"].'">'.$_SESSION["User_ID"].'</a><br>' ?>
+                <br> vous &ecirc;tes connect&eacute;s au compte: &nbsp; <?php echo  '<a class="users" href="user.php?actual='.$_SESSION["User_ID"].'">'.$_SESSION["User_ID"].'</a><br>' ?>
                 <a href="signOut.php" class="btn btn-info">sign out</a>
                 <?php } ?>
         </div>

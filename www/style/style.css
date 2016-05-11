@@ -48,9 +48,9 @@ button.cafes {
     color:white;
 }
 
-a.users {color:red;}
-a.users:link  {text-decoration: none; color: red;}
-a.users:visited {text-decoration: none; color: red;}
-a.users:hover {text-decoration: underline; color: red;}
-a.users:active {text-decoration: none; color: red;}
+a.users {color:black;}
+a.users:link  {text-decoration: none; color: black;background-color: transparent;}
+a.users:visited {text-decoration: none; color: red;background-color: transparent;}
+a.users:hover {text-decoration: underline; color: blue;background-color: transparent;}
+a.users:active {text-decoration: none; color: red;background-color: transparent;}
 

@@ -83,7 +83,7 @@ if ($actual){
                     <div class="panel-body">
                         Adresse:&nbsp; <?php echo $res[0]["AdNumero"]."  ".$res[0]["AdRue"]."  ".$res[0]["AdCodePostal"]."  ".$res[0]["AdCity"] ?> <br>
                         latitude / longitude: &nbsp; <?php echo $res[0]["Latitude"]." / ".$res[0]["Longitude"]?> <br>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d800.7861924332165!2d<?php echo $res[0]["Longitude"] ?>!3d<?php echo $res[0]["Latitude"] ?>!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfr!2sus!4v1462888317175" width="430" height="320" frameborder="1" style="border:1" allowfullscreen></iframe>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d800.7861924332165!2d<?php echo $res[0]["Longitude"] ?>!3d<?php echo $res[0]["Latitude"] ?>!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfr!2sus!4v1462888317175" width="430" height="320" frameborder="0" style="border:0" allowfullscreen></iframe>
                     </div>
                 </div>
                 </div>
@@ -129,7 +129,7 @@ if ($actual){
                         while(($res = $statement->fetch(PDO::FETCH_ASSOC))){?>
                             <div class='panel-default'>
                                 <div class='panel-heading'>
-                                    <div class='panel-title'><?php echo  '<a class="users" href="user.php?actual='.$res['User_ID'].'">'.$res['User_ID'].'</a><br>' ?> <span class='pull-right'> Note donn&eacutee:&nbsp; <?php echo $res['Score'];?></span></div>
+                                    <div class='panel-title'><?php echo  '<a class="users" href="user.php?actual='.$res['User_ID'].'">'.$res['User_ID'].'</a>' ?> <span class='pull-right'> Note donn&eacutee:&nbsp; <?php echo $res['Score'];?></span></div>
                                 </div>
                                 <div class='panel-body'>
                                     <?php echo $res['Com']; ?> <br>
