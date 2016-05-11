@@ -7,7 +7,7 @@ $actual = isset($_GET["actual"]) ? $_GET["actual"] : null;
 ?>
 <div class="panel panel-primary">
     <div class="panel-heading">
-        <h3 class="panel-title"><?php echo $actual; ?></h3>
+        <h3 class="panel-title"><?php echo $actual ?></h3>
     </div>
     <div class="panel-body">
         <div class="panel-info">
@@ -24,7 +24,7 @@ $actual = isset($_GET["actual"]) ? $_GET["actual"] : null;
             </div>
         </div>
     </div>
-    <?-- un deuxieme body permet un espacement --?>
+    <!-- un deuxieme body permet un espacement -->
     <div class="panel-body">
         <div class="panel-info">
             <div class="panel-heading">
