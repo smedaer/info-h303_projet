@@ -15,13 +15,12 @@ if ($search){
 </head>
 
 <nav class="navbar navbar-default">
-    <?-- en-tête --?>
     <div class="row">
-        <div class="col-md-2"></div> <?-- décalage --?>
+        <div class="col-md-2"></div>
         <div class="col-md-3">
-            <a href="/Horeca">
+            <a href="index.php">
             <img src="Images/logo.png">
-            </a> <?-- permet de revenir à l accueil en cliquant sur l img --?>
+            </a>
         </div>
         <div class="col-md-3">
             <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recherche:</h3>
