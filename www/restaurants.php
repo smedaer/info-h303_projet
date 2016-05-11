@@ -6,6 +6,7 @@ include "connection.php";
 $actual = isset($_GET["actual"]) ? $_GET["actual"] : null;
 $newCom = isset($_POST['newCom']) ? $_POST['newCom'] : null;
 $newScore = isset($_POST['newScore']) ? $_POST['newScore'] : null;
+$newLabel = isset($_POST['newLabel']) ? $_POST['newLabel'] : null;
 if ($newCom){
     $newScore = intval($newScore);
     $statement = $db->prepare("INSERT INTO Descriptions(User_ID,Eta_ID) VALUES(:User_ID,:Eta_ID)");
@@ -17,6 +18,16 @@ if ($newCom){
     $statement->execute(array("Des_ID" => $Des_ID,"newCom" => $newCom,"Creation_date" => ((new Datetime())->format('Y-m-d H:i:s')),"newScore" => $newScore));
 }
 
+if ($newLabel){
+    $statement = $db->prepare("INSERT INTO Descriptions(User_ID,Eta_ID) VALUES(:User_ID,:Eta_ID)");
+    $statement->execute(array("User_ID" => $_SESSION["User_ID"],"Eta_ID" => $actual));
+    $statement = $db->prepare("SELECT Des_ID FROM Descriptions ORDER BY Des_ID DESC LIMIT 1");
+    $statement->execute(array());
+    $Des_ID = intval($statement->fetch(PDO::FETCH_ASSOC)["Des_ID"]);
+    $statement = $db->prepare("INSERT INTO Labels(Lab_ID,Label) VALUES(:Des_ID,:Label)");
+    $statement->execute(array("Des_ID" => $Des_ID,"Label" => $newLabel));
+}
+
 if ($actual){
     $statement = $db->prepare("SELECT AdRue,AdNumero,AdCodePostal,AdCity,Longitude,Latitude,Tel,Site,Admin FROM Etablissements WHERE Eta_ID = :Eta_ID");
     $statement->execute(array("Eta_ID" => $actual));
@@ -24,10 +35,6 @@ if ($actual){
     $statement = $db->prepare("SELECT Prix,Couverts,Emporter,Livraison,Fermeture FROM Restaurants WHERE Rest_ID = :Eta_ID");
     $statement->execute(array("Eta_ID" => $actual));
     $resRest = $statement->fetchAll(PDO::FETCH_ASSOC);
-    $statement = $db->prepare("SELECT User_ID FROM Descriptions WHERE Eta_ID = :Eta_ID AND EXISTS(SELECT * FROM Commentaires WHERE Des_ID = Com_ID)");
-    $statement->execute(array("Eta_ID" => $actual));
-    $statement1 = $db->prepare("SELECT Com,Creation_date,Score FROM Commentaires WHERE EXISTS(SELECT * FROM Descriptions WHERE Des_ID = Com_ID AND Eta_ID = :Eta_ID)");
-    $statement1->execute(array("Eta_ID" => $actual));
     ?>
     <div class="panel panel-primary">
         <div class="panel-heading">
@@ -55,6 +62,24 @@ if ($actual){
                         T&eacutel&eacutephone:&nbsp; <?php echo $resEta[0]["Tel"] ?> <br>
                         Site:&nbsp; <?php echo ($resEta[0]["Site"]? '<a href="https://'.$resEta[0]["Site"].'">'.$resEta[0]["Site"].'</a>' : "Nous n'avons pas de site") ?> <br>
                         Admin sur le site: &nbsp; <?php echo $resEta[0]["Admin"] ?> <br>
+                    </div>
+                </div>
+                <div class="panel-info">
+                    <div class="panel-heading">
+                        <h2 class="panel-title"> Labels </h2>
+                    </div>
+                    <div class="panel-body">
+                        <?php
+                        $statement = $db->prepare("SELECT DISTINCT Label FROM Labels WHERE EXISTS(SELECT * FROM Descriptions WHERE Des_ID = Lab_ID AND Eta_ID = :actual)");
+                        $statement->execute(array("actual" => $actual));
+                        while($label = $statement->fetch(PDO::FETCH_ASSOC)["Label"]){echo "#".$label."&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";}
+                        if(isset($_SESSION["User_ID"])){?>
+                            <br><br>
+                            <form action="<?php echo "?actual=".$actual; ?>" method="post" class="form-horizontal">
+                                <input class="form-control" name="newLabel" placeholder="Ajouter un label" value="<?php echo $newLabel ?>">
+                                <button type="submit" class="btn btn-primary">Ajouter</button>
+                            </form>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -107,6 +132,10 @@ if ($actual){
                                 </fieldset>
                             </form>
                         <?php }
+                        $statement = $db->prepare("SELECT User_ID FROM Descriptions WHERE Eta_ID = :Eta_ID AND EXISTS(SELECT * FROM Commentaires WHERE Des_ID = Com_ID)");
+                        $statement->execute(array("Eta_ID" => $actual));
+                        $statement1 = $db->prepare("SELECT Com,Creation_date,Score FROM Commentaires WHERE EXISTS(SELECT * FROM Descriptions WHERE Des_ID = Com_ID AND Eta_ID = :Eta_ID)");
+                        $statement1->execute(array("Eta_ID" => $actual));
                         while(($author = $statement->fetch(PDO::FETCH_ASSOC)) && ($com = $statement1->fetch(PDO::FETCH_ASSOC))){?>
                             <div class='panel-default'>
                                 <div class='panel-heading'>
