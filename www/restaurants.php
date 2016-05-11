@@ -68,7 +68,7 @@ if ($actual){
                         if(isset($_SESSION["User_ID"])){?>
                             <br><br>
                             <form action="<?php echo "?actual=".$actual; ?>" method="post" class="form-horizontal">
-                                <input class="form-control" name="newLabel" placeholder="Ajouter un label" value="<?php echo $newLabel ?>">
+                                <input class="form-control" name="newLabel" placeholder="Ajouter un label" value="<?php echo $newLabel; ?>">
                                 <button type="submit" class="btn btn-primary">Ajouter</button>
                             </form>
                         <?php } ?>
@@ -100,7 +100,7 @@ if ($actual){
                                     <div class="form-group">
                                         <label for="textArea" class="col-lg-2 control-label">Commentaire</label>
                                         <div class="col-lg-10">
-                                            <textarea style="width:700px; height:100px;" name="newCom" class="form-control" placeholder="Nouveau commentaire" value="<?php echo $newCom ?>" rows="3" id="textArea"></textarea>
+                                            <textarea style="width:700px; height:100px;" name="newCom" class="form-control" placeholder="Nouveau commentaire" value="<?php echo $newCom; ?>" rows="3" id="textArea"></textarea>
                                         </div>
                                     </div>
                                     <div class="form-group">
