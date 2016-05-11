@@ -10,7 +10,7 @@ $password = isset($_POST['password']) ? $_POST['password'] : null;
 if ($email === null) {
     $error = true;
 } else {
-    $statement = $db->prepare("SELECT User_ID,PSWD FROM Users WHERE Email = :email");
+    $statement = $db->prepare("SELECT User_ID,PSWD,Is_Admin FROM Users WHERE Email = :email");
     $statement->execute(array("email" => $email));
     $res = $statement->fetchAll(PDO::FETCH_ASSOC);
     if (count($res) != 1) {
@@ -27,6 +27,7 @@ if ($email === null) {
         // connection
         $_SESSION["User_ID"] = $res[0]["User_ID"];
         $_SESSION["Email"] = $email;
+        $_SESSION["Is_Admin"] = $res[0]["Is_Admin"];
         header("Location: index.php");
 }
 }
