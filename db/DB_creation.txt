@@ -63,8 +63,8 @@ CREATE TABLE Descriptions (
 
 CREATE TABLE Commentaires (
 	Com_ID			INTEGER UNSIGNED REFERENCES Descriptions (Des_ID),
-	Com				TEXT,
-	Creation_date	DATE,
+	Com			TEXT,
+	Creation_date		DATE,
 	Score			SMALLINT UNSIGNED,
 	PRIMARY KEY (Com_ID)
 );
