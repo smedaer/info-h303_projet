@@ -28,7 +28,7 @@ CREATE TABLE Etablissements (
 );
 
 CREATE TABLE Restaurants (
-	Rest_ID			VARCHAR(30) NOT NULL REFERENCES Etablissements (Eta_ID),
+	Rest_ID			VARCHAR(30) NOT NULL REFERENCES Etablissements (Eta_ID) ON DELETE CASCADE,
 	Prix			SMALLINT UNSIGNED,
 	Couverts		SMALLINT UNSIGNED,
 	Emporter		BOOLEAN,
@@ -38,14 +38,14 @@ CREATE TABLE Restaurants (
 );
 
 CREATE TABLE Cafes (
-	Cafe_ID			VARCHAR(30) NOT NULL REFERENCES Etablissements (Eta_ID),
+	Cafe_ID			VARCHAR(30) NOT NULL REFERENCES Etablissements (Eta_ID) ON DELETE CASCADE,
 	Fumeur			BOOLEAN,
 	Restauration	BOOLEAN,
 	PRIMARY KEY (Cafe_ID)
 );
 
 CREATE TABLE Hotels (
-	Hot_ID			VARCHAR(30) NOT NULL REFERENCES Etablissements (Eta_ID),
+	Hot_ID			VARCHAR(30) NOT NULL REFERENCES Etablissements (Eta_ID) ON DELETE CASCADE,
 	Prix			SMALLINT UNSIGNED,
 	Chambres		SMALLINT UNSIGNED,
 	Etoiles			SMALLINT UNSIGNED,
@@ -57,12 +57,12 @@ CREATE TABLE Descriptions (
 	User_ID			VARCHAR(30),
 	Eta_ID			VARCHAR(30),
 	PRIMARY KEY (Des_ID),
-	FOREIGN KEY (User_ID) REFERENCES Users(User_ID),
-	FOREIGN KEY (Eta_ID) REFERENCES Etablissements(Eta_ID)
+	FOREIGN KEY (User_ID) REFERENCES Users(User_ID) ON DELETE CASCADE,
+	FOREIGN KEY (Eta_ID) REFERENCES Etablissements(Eta_ID) ON DELETE CASCADE
 );
 
 CREATE TABLE Commentaires (
-	Com_ID			INTEGER UNSIGNED REFERENCES Descriptions (Des_ID),
+	Com_ID			INTEGER UNSIGNED REFERENCES Descriptions (Des_ID) ON DELETE CASCADE,
 	Com			TEXT,
 	Creation_date		DATE,
 	Score			SMALLINT UNSIGNED,
@@ -70,7 +70,7 @@ CREATE TABLE Commentaires (
 );
 
 CREATE TABLE Labels (
-	Lab_ID			INTEGER UNSIGNED REFERENCES Descriptions (Des_ID),
+	Lab_ID			INTEGER UNSIGNED REFERENCES Descriptions (Des_ID) ON DELETE CASCADE,
 	Label			VARCHAR(40),
 	PRIMARY KEY (Lab_ID)
 );
