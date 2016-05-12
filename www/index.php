@@ -1,8 +1,8 @@
-<?php include "header.php";
+<?php include "header.php"; include "connection.php";
 $delete = isset($_POST['delete']) ? $_POST['delete'] : null;
 if ($delete){
-    // delete etablissement
-    // echo msg (error or success)
+    $statement = $db->prepare("DELETE FROM Etablissements E JOIN Restaurants R ON R.Rest_ID = E.Eta_ID WHERE E.Eta_ID = :Eta_ID");
+    $statement->execute(array("Eta_ID" => $delete));
 }
 ?>
 

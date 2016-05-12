@@ -20,9 +20,22 @@ $Restauration = isset($_POST["Restauration"]) ? intval($_POST["Restauration"]) :
 $Chambres = isset($_POST["Chambres"]) ? intval($_POST["Chambres"]) : null;
 $Etoiles = isset($_POST["Etoiles"]) ? intval($_POST["Etoiles"]) : null;
 
-
 if ($Eta_ID){
-    // insert DB
+    $statement = $db->prepare("INSERT INTO Etablissements (Eta_ID,AdRue,AdNumero,AdCodePostal,AdCity,Longitude,Latitude,Tel,Site,Creation_date,Admin) VALUES (:Eta_ID,:AdRue,:AdNumero,:AdCodePostal,:AdCity,:Longitude,:Latitude,:Tel,:Site,:Creation_date,:Admin)");
+    $statement->execute(array("Eta_ID" => $Eta_ID, "AdRue" => $AdRue, "AdNumero" => $AdNumero, "AdCodePostal" => $AdCodePostal, "AdCity" => $AdCity, "Longitude" => $Longitude, "Latitude" => $Latitude, "Tel" => $Tel, "Site" => $Site, "Creation_date" => (new Datetime())->format('Y-m-d H:i:s'), "Admin" => $_SESSION["User_ID"]));
+    if ($actual === 'restaurant'){
+        $statement = $db->prepare("INSERT INTO Restaurants (Rest_ID,Prix,Couverts,Emporter,Livraison,Fermeture) VALUES (:Rest_ID,:Prix,:Couverts,:Emporter,:Livraison,:Fermeture)");
+        $statement->execute(array("Rest_ID" => $Eta_ID,"Prix" => $Prix, "Couverts" => $Couverts, "Emporter" => $Emporter, "Livraison" => $Livraison, "Fermeture" => '10101010'));
+        // manque demi jours de fermeture
+    }
+    elseif ($actual === 'coffee'){
+        $statement = $db->prepare("INSERT INTO Cafes (Cafe_ID,Fumeur,Restauration) VALUES (:Cafe_ID,:Fumeur,:Restauration)");
+        $statement->execute(array("Cafe_ID" => $Eta_ID,"Fumeur" => $Fumeur, "Restauration" => $Restauration));
+    }
+    else{
+        $statement = $db->prepare("INSERT INTO Hotels (Hot_ID,Prix,Chambres,Etoiles) VALUES (:Hot_ID,:Prix,:Chambres,:Etoiles)");
+        $statement->execute(array("Hot_ID" => $Eta_ID,"Prix" => $Prix, "Chambres" => $Chambres, "Etoiles" => $Etoiles));
+    }
     header('location: index.php');
 }
 
@@ -59,10 +72,10 @@ function yesOrNo($varName,$placeHolder){?>
 
 <div class="jumbotron col-md-12">
     <div class="row">
-        <form action="addEta.php" method="post">
+        <form action=<?php echo '"addEta.php?actual='.$actual.'"';?> method="post">
             <?php
             // entry(varName,placeHolder,var,entryType,entryLength)
-            //entry('Eta_ID','Nom',$Eta_ID,'text','50');
+            entry('Eta_ID','Nom',$Eta_ID,'text','50');
             entry('AdRue','Rue',$AdRue,'text','50');
             entry('AdNumero','N&deg;',$AdNumero,'number','5');
             entry('AdCodePostal','Code postal',$AdCodePostal,'number','5');
@@ -70,7 +83,7 @@ function yesOrNo($varName,$placeHolder){?>
             entry('Longitude','Longitude en d&eacute;cimal',$Longitude,'number','20');
             entry('Latitude','Latitude en d&eacute;cimal',$Latitude,'number','20');
             entry('Tel','T&eacute;l&eacute;phone',$Tel,'tel','20');
-            entry('Site internet','Site',$Site,'url','50');
+            entry('Site internet','Site',$Site,'text','50');
             if ($actual === 'restaurant'){
                 entry('Prix','Prix moyen',$Prix,'money','5');
                 entry('Couverts','Couverts maximum',$Couverts,'number','5');
@@ -78,7 +91,7 @@ function yesOrNo($varName,$placeHolder){?>
                 yesOrNo('Livraison','Livrez-vous?');
                 // demi jours de fermeture radio
             }
-            elseif ($actual === 'hotel'){
+            elseif ($actual === 'coffee'){
                 yesOrNo('Fumeur','Espace fumeur?');
                 yesOrNo('Restauration','Server-vous &agrave; manger?');
             }
