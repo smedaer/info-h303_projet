@@ -86,8 +86,23 @@ if ($actual){
                         <iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d800.7861924332165!2d<?php echo $res[0]["Longitude"] ?>!3d<?php echo $res[0]["Latitude"] ?>!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfr!2sus!4v1462888317175" width="430" height="320" frameborder="0" style="border:0" allowfullscreen></iframe>
                     </div>
                 </div>
-                </div>
+            </div>
+            <?php if($_SESSION["User_ID"] === $res[0]["Admin"]) { ?>
                 <div class="col-md-12">
+                    <div class="col-md-2 col-md-offset-4">
+                        <?php echo '<a href="modify.php?actual=restaurant&Eta_ID='.$actual.'">' ?>
+                            <input class="btn btn-primary" value="Modifier">
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <?php echo '<a href="delete.php?actual=restaurant&Eta_ID='.$actual.'">' ?>
+                            <input class="btn btn-primary" value="Supprimer">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-12"><br></br></div>
+            <?php } ?>
+            <div class="col-md-12">
                 <div class="panel-success">
                     <div class="panel-heading">
                         <h2 class="panel-title"> Commentaires </h2>

@@ -1,8 +1,10 @@
 <?php
 include "header.php";
 include "connection.php";
+
 $actual = isset($_GET["actual"]) ? $_GET["actual"] : null;
-$Eta_ID = isset($_POST["Eta_ID"]) ? $_POST["Eta_ID"] : null;
+$Eta_ID = isset($_GET["Eta_ID"]) ? $_GET["Eta_ID"] : null;
+$modified = isset($_GET["modified"]) ? $_GET["modified"] : false;
 $AdRue = isset($_POST["AdRue"]) ? $_POST["AdRue"] : null;
 $AdNumero = isset($_POST["AdNumero"]) ? intval($_POST["AdNumero"]) : null;
 $AdCodePostal = isset($_POST["AdCodePostal"]) ? intval($_POST["AdCodePostal"]) : null;
@@ -15,31 +17,67 @@ $Prix = isset($_POST["Prix"]) ? floatval($_POST["Prix"]) : null;
 $Couverts = isset($_POST["Couverts"]) ? intval($_POST["Couverts"]) : null;
 $Emporter = isset($_POST["Emporter"]) ? intval($_POST["Emporter"]) : null;
 $Livraison = isset($_POST["Livraison"]) ? intval($_POST["Livraison"]) : null;
+$Fermeture = isset($_POST["Fermeture"]) ? $_POST["Fermeture"] : null;
 $Fumeur = isset($_POST["Fumeur"]) ? intval($_POST["Fumeur"]) : null;
 $Restauration = isset($_POST["Restauration"]) ? intval($_POST["Restauration"]) : null;
 $Chambres = isset($_POST["Chambres"]) ? intval($_POST["Chambres"]) : null;
 $Etoiles = isset($_POST["Etoiles"]) ? intval($_POST["Etoiles"]) : null;
+$errorMsg = null;
 
-if ($Eta_ID){
-    $statement = $db->prepare("INSERT INTO Etablissements (Eta_ID,AdRue,AdNumero,AdCodePostal,AdCity,Longitude,Latitude,Tel,Site,Creation_date,Admin) VALUES (:Eta_ID,:AdRue,:AdNumero,:AdCodePostal,:AdCity,:Longitude,:Latitude,:Tel,:Site,:Creation_date,:Admin)");
-    $statement->execute(array("Eta_ID" => $Eta_ID, "AdRue" => $AdRue, "AdNumero" => $AdNumero, "AdCodePostal" => $AdCodePostal, "AdCity" => $AdCity, "Longitude" => $Longitude, "Latitude" => $Latitude, "Tel" => $Tel, "Site" => $Site, "Creation_date" => (new Datetime())->format('Y-m-d H:i:s'), "Admin" => $_SESSION["User_ID"]));
+if ($modified){
+    $statement = $db->prepare("UPDATE Etablissements SET AdRue=:AdRue, AdNumero=:AdNumero, AdCodePostal=:AdCodePostal, AdCity=:AdCity, Longitude=:Longitude, Latitude=:Latitude, Tel=:Tel, Site=:Site WHERE Eta_ID = :Eta_ID");
+    $statement->execute(array("Eta_ID" => $Eta_ID, "AdRue" => $AdRue, "AdNumero" => $AdNumero, "AdCodePostal" => $AdCodePostal, "AdCity" => $AdCity, "Longitude" => $Longitude, "Latitude" => $Latitude, "Tel" => $Tel, "Site" => $Site));
     if ($actual === 'restaurant'){
-        $statement = $db->prepare("INSERT INTO Restaurants (Rest_ID,Prix,Couverts,Emporter,Livraison,Fermeture) VALUES (:Rest_ID,:Prix,:Couverts,:Emporter,:Livraison,:Fermeture)");
-        $statement->execute(array("Rest_ID" => $Eta_ID,"Prix" => $Prix, "Couverts" => $Couverts, "Emporter" => $Emporter, "Livraison" => $Livraison, "Fermeture" => '10101010'));
+        $statement = $db->prepare("UPDATE Restaurants SET Prix=:Prix, Couverts=:Couverts, Emporter=:Emporter, Livraison=:Livraison, Fermeture=:Fermeture WHERE Rest_ID=:Eta_ID");
+        $statement->execute(array("Eta_ID" => $Eta_ID,"Prix" => $Prix, "Couverts" => $Couverts, "Emporter" => $Emporter, "Livraison" => $Livraison, "Fermeture" => '10101010'));
         // manque demi jours de fermeture
     }
     elseif ($actual === 'coffee'){
-        $statement = $db->prepare("INSERT INTO Cafes (Cafe_ID,Fumeur,Restauration) VALUES (:Cafe_ID,:Fumeur,:Restauration)");
-        $statement->execute(array("Cafe_ID" => $Eta_ID,"Fumeur" => $Fumeur, "Restauration" => $Restauration));
+        $statement = $db->prepare("UPDATE Cafes SET Fumeur=:Fumeur, Restauration=:Restauration WHERE Cafe_ID=:Eta_ID");
+        $statement->execute(array("Eta_ID" => $Eta_ID,"Fumeur" => $Fumeur, "Restauration" => $Restauration));
     }
     else{
-        $statement = $db->prepare("INSERT INTO Hotels (Hot_ID,Prix,Chambres,Etoiles) VALUES (:Hot_ID,:Prix,:Chambres,:Etoiles)");
-        $statement->execute(array("Hot_ID" => $Eta_ID,"Prix" => $Prix, "Chambres" => $Chambres, "Etoiles" => $Etoiles));
+        $statement = $db->prepare("UPDATE Hotels SET Prix=:Prix, Chambres=:Chambres, Etoiles=:Etoiles WHERE Hot_ID=:Eta_ID");
+        $statement->execute(array("Eta_ID" => $Eta_ID,"Prix" => $Prix, "Chambres" => $Chambres, "Etoiles" => $Etoiles));
     }
-    header('location: index.php');
+    header('location: ');
 }
 
-$errorMsg = null;
+else{
+    $modified = true;
+    // on récupère les anciennes données
+    if ($actual === 'restaurant'){
+        $statement = $db->prepare("SELECT AdRue,AdNumero,AdCodePostal,AdCity,Longitude,Latitude,Tel,Site,Prix,Couverts,Emporter,Livraison,Fermeture FROM Etablissements E, Restaurants R WHERE E.Eta_ID = :Eta_ID AND R.Rest_ID = :Eta_ID");
+        $statement->execute(array("Eta_ID" => $Eta_ID));
+        $res = $statement->fetch(PDO::FETCH_ASSOC);
+        $Prix = $res["Prix"];
+        $Emporter = $res["Emporter"];
+        $Couverts = $res["Couverts"];
+        $Livraison = $res["Livraison"];
+        $Fermeture = $res["Fermeture"];
+    } else if ($actual === 'coffee'){
+        $statement = $db->prepare("SELECT AdRue,AdNumero,AdCodePostal,AdCity,Longitude,Latitude,Tel,Site,Fumeur,Restauration FROM Etablissements E, Cafes C WHERE E.Eta_ID = :Eta_ID AND C.Cafe_ID = :Eta_ID");
+        $statement->execute(array("Eta_ID" => $Eta_ID));
+        $res = $statement->fetch(PDO::FETCH_ASSOC);
+        $Fumeur = $res["Fumeur"];
+        $Restauration = $res["Restauration"];
+    } else {
+        $statement = $db->prepare("SELECT AdRue,AdNumero,AdCodePostal,AdCity,Longitude,Latitude,Tel,Site,Prix,Chambres,Etoiles FROM Etablissements E, Hotels H WHERE E.Eta_ID = :Eta_ID AND H.Hot_ID = :Eta_ID");
+        $statement->execute(array("Eta_ID" => $Eta_ID));
+        $res = $statement->fetch(PDO::FETCH_ASSOC);
+        $Prix = $res["Prix"];
+        $Chambres = $res["Chambres"];
+        $Etoiles = $res["Etoiles"];
+    }
+    $AdRue = $res["AdRue"];
+    $AdNumero = $res["AdNumero"];
+    $AdCodePostal = $res["AdCodePostal"];
+    $AdCity = $res["AdCity"];
+    $Longitude = $res["Longitude"];
+    $Latitude = $res["Latitude"];
+    $Tel = $res["Tel"];
+    $Site = $res["Site"];
+}
 function entry($varName,$placeHolder,$var,$type,$size){
     echo '<div class="col-md-12 form-group col-md-offset-1">';
         echo '<label for="'.$varName.'" class="control-label col-md-4 required">';
@@ -70,12 +108,14 @@ function yesOrNo($varName,$placeHolder){?>
 ?>
 <body>
 
-<div class="jumbotron col-md-12">
-    <div class="row">
-        <form action=<?php echo '"addEta.php?actual='.$actual.'"';?> method="post">
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title"><?php echo $Eta_ID ?></h3>
+    </div>
+    <div class="panel-body">
+        <form action=<?php echo '"modify.php?actual='.$actual.'&Eta_ID='.$Eta_ID.'&modified='.$modified.'"';?> method="post">
             <?php
             // entry(varName,placeHolder,var,entryType,entryLength)
-            entry('Eta_ID','Nom',$Eta_ID,'text','50');
             entry('AdRue','Rue',$AdRue,'text','50');
             entry('AdNumero','N&deg;',$AdNumero,'number','5');
             entry('AdCodePostal','Code postal',$AdCodePostal,'number','5');
@@ -103,13 +143,13 @@ function yesOrNo($varName,$placeHolder){?>
             ?>
             <div class="col-md-12">
                 <div class="col-md-3 col-md-offset-5">
-                    <input type="submit" class="btn btn-success" value="Ajouter">
+                    <input type="submit" class="btn btn-success" value="Modifier">
                 </div>
                 <font color="red"><br><br><?php echo $errorMsg; ?></font>
             </div>
         </form>
     </div>
 </div>
-
 <?php include "footer.php"; ?>
+
 
