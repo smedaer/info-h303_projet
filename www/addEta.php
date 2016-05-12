@@ -80,7 +80,7 @@ function yesOrNo($varName,$placeHolder){?>
             }
             elseif ($actual === 'hotel'){
                 yesOrNo('Fumeur','Espace fumeur?');
-                yesOrNo('Restauration','Server-vous à manger?');
+                yesOrNo('Restauration','Server-vous &agrave; manger?');
             }
             else{
                 entry('Prix','Prix moyen',$Prix,'money','5');
