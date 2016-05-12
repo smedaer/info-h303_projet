@@ -2,6 +2,15 @@ DROP DATABASE IF EXISTS horeca;
 CREATE DATABASE horeca CHARACTER SET 'utf8';
 use horeca;
 
+CREATE TABLE Users (
+	User_ID			VARCHAR(30) NOT NULL UNIQUE,
+	Email			VARCHAR(40),
+	PSWD			VARCHAR(20),
+	Creation_date	DATE,
+	Is_Admin		BOOLEAN,
+	PRIMARY KEY (User_ID)
+);
+
 CREATE TABLE Etablissements (
 	Eta_ID			VARCHAR(30) NOT NULL UNIQUE,
 	AdRue			VARCHAR(50),
@@ -13,8 +22,9 @@ CREATE TABLE Etablissements (
 	Tel				CHAR(12),
 	Site			VARCHAR(50),
 	Creation_date	DATE,
-	Admin			VARCHAR(30) REFERENCES Users (User_ID),
-	PRIMARY KEY (Eta_ID)
+	Admin			VARCHAR(30),
+	PRIMARY KEY (Eta_ID),
+	FOREIGN KEY (Admin) REFERENCES Users(User_ID)
 );
 
 CREATE TABLE Restaurants (
@@ -40,16 +50,6 @@ CREATE TABLE Hotels (
 	Chambres		SMALLINT UNSIGNED,
 	Etoiles			SMALLINT UNSIGNED,
 	PRIMARY KEY (Hot_ID)
-);
-
-
-CREATE TABLE Users (
-	User_ID			VARCHAR(30) NOT NULL UNIQUE,
-	Email			VARCHAR(40),
-	PSWD			VARCHAR(20),
-	Creation_date	DATE,
-	Is_Admin		BOOLEAN,
-	PRIMARY KEY (User_ID)
 );
 
 CREATE TABLE Descriptions (
