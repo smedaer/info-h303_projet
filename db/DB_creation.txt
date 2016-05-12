@@ -13,7 +13,7 @@ CREATE TABLE Etablissements (
 	Tel				CHAR(12),
 	Site			VARCHAR(50),
 	Creation_date	DATE,
-	Admin			VARCHAR(30),
+	Admin			VARCHAR(30) REFERENCES Users (User_ID),
 	PRIMARY KEY (Eta_ID)
 );
 
