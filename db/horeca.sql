@@ -16,6 +16,14 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Current Database: `horeca`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `horeca` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+USE `horeca`;
+
+--
 -- Table structure for table `Cafes`
 --
 
@@ -23,7 +31,7 @@ DROP TABLE IF EXISTS `Cafes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Cafes` (
-  `Cafe_ID` int(10) unsigned NOT NULL DEFAULT '0',
+  `Cafe_ID` varchar(30) NOT NULL,
   `Fumeur` tinyint(1) DEFAULT NULL,
   `Restauration` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`Cafe_ID`)
@@ -49,6 +57,7 @@ DROP TABLE IF EXISTS `Commentaires`;
 CREATE TABLE `Commentaires` (
   `Com_ID` int(10) unsigned NOT NULL DEFAULT '0',
   `Com` text,
+  `Creation_date` date DEFAULT NULL,
   `Score` smallint(5) unsigned DEFAULT NULL,
   PRIMARY KEY (`Com_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -72,13 +81,14 @@ DROP TABLE IF EXISTS `Descriptions`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Descriptions` (
   `Des_ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `Auteur` varchar(20) DEFAULT NULL,
-  `Creation_date` date DEFAULT NULL,
-  `User_ID` int(10) unsigned DEFAULT NULL,
+  `User_ID` varchar(30) DEFAULT NULL,
+  `Eta_ID` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`Des_ID`),
   UNIQUE KEY `Des_ID` (`Des_ID`),
   KEY `User_ID` (`User_ID`),
-  CONSTRAINT `Descriptions_ibfk_1` FOREIGN KEY (`User_ID`) REFERENCES `Users` (`User_ID`)
+  KEY `Eta_ID` (`Eta_ID`),
+  CONSTRAINT `Descriptions_ibfk_1` FOREIGN KEY (`User_ID`) REFERENCES `Users` (`User_ID`),
+  CONSTRAINT `Descriptions_ibfk_2` FOREIGN KEY (`Eta_ID`) REFERENCES `Etablissements` (`Eta_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -92,36 +102,38 @@ LOCK TABLES `Descriptions` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Etablissement`
+-- Table structure for table `Etablissements`
 --
 
-DROP TABLE IF EXISTS `Etablissement`;
+DROP TABLE IF EXISTS `Etablissements`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Etablissement` (
-  `Eta_ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `Name` varchar(30) NOT NULL,
+CREATE TABLE `Etablissements` (
+  `Eta_ID` varchar(30) NOT NULL,
   `AdRue` varchar(50) DEFAULT NULL,
   `AdNumero` smallint(5) unsigned DEFAULT NULL,
   `AdCodePostal` smallint(5) unsigned DEFAULT NULL,
-  `Longitude` smallint(5) unsigned DEFAULT NULL,
-  `Latitude` smallint(5) unsigned DEFAULT NULL,
-  `Tel` int(10) unsigned DEFAULT NULL,
-  `Des_ID` int(10) unsigned DEFAULT NULL,
+  `AdCity` varchar(30) DEFAULT NULL,
+  `Longitude` double unsigned DEFAULT NULL,
+  `Latitude` double unsigned DEFAULT NULL,
+  `Tel` char(12) DEFAULT NULL,
+  `Site` varchar(50) DEFAULT NULL,
+  `Creation_date` date DEFAULT NULL,
+  `Admin` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`Eta_ID`),
   UNIQUE KEY `Eta_ID` (`Eta_ID`),
-  KEY `Des_ID` (`Des_ID`),
-  CONSTRAINT `Etablissement_ibfk_1` FOREIGN KEY (`Des_ID`) REFERENCES `Descriptions` (`Des_ID`)
+  KEY `Admin` (`Admin`),
+  CONSTRAINT `Etablissements_ibfk_1` FOREIGN KEY (`Admin`) REFERENCES `Users` (`User_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Etablissement`
+-- Dumping data for table `Etablissements`
 --
 
-LOCK TABLES `Etablissement` WRITE;
-/*!40000 ALTER TABLE `Etablissement` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Etablissement` ENABLE KEYS */;
+LOCK TABLES `Etablissements` WRITE;
+/*!40000 ALTER TABLE `Etablissements` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Etablissements` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -132,7 +144,7 @@ DROP TABLE IF EXISTS `Hotels`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Hotels` (
-  `Hot_ID` int(10) unsigned NOT NULL DEFAULT '0',
+  `Hot_ID` varchar(30) NOT NULL,
   `Prix` smallint(5) unsigned DEFAULT NULL,
   `Chambres` smallint(5) unsigned DEFAULT NULL,
   `Etoiles` smallint(5) unsigned DEFAULT NULL,
@@ -180,12 +192,12 @@ DROP TABLE IF EXISTS `Restaurants`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Restaurants` (
-  `Rest_ID` int(10) unsigned NOT NULL DEFAULT '0',
+  `Rest_ID` varchar(30) NOT NULL,
   `Prix` smallint(5) unsigned DEFAULT NULL,
   `Couverts` smallint(5) unsigned DEFAULT NULL,
   `Emporter` tinyint(1) DEFAULT NULL,
   `Livraison` tinyint(1) DEFAULT NULL,
-  `Fermeture` tinyint(1) DEFAULT NULL,
+  `Fermeture` char(27) DEFAULT NULL,
   PRIMARY KEY (`Rest_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -207,12 +219,11 @@ DROP TABLE IF EXISTS `Users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Users` (
-  `User_ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `Name` varchar(20) DEFAULT NULL,
+  `User_ID` varchar(30) NOT NULL,
   `Email` varchar(40) DEFAULT NULL,
   `PSWD` varchar(20) DEFAULT NULL,
   `Creation_date` date DEFAULT NULL,
-  `Admin` tinyint(1) DEFAULT NULL,
+  `Is_Admin` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`User_ID`),
   UNIQUE KEY `User_ID` (`User_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -236,4 +247,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-08 18:35:36
+-- Dump completed on 2016-05-12 16:17:03
