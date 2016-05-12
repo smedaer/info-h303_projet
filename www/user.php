@@ -24,6 +24,7 @@ $actual = isset($_GET["actual"]) ? $_GET["actual"] : null;
             </div>
         </div>
     </div>
+    <!-- un deuxieme body permet un espacement -->
     <div class="panel-body">
         <div class="panel-info">
             <div class="panel-heading">

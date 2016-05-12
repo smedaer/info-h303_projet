@@ -71,7 +71,7 @@ if (!$error) {
         </div>
         <div class="col-md-12 form-group">
             <label for="password_repeated" class="control-label col-md-3 required">
-                verification du mot de passe
+                Verification du mot de passe
             </label>
             <div class="col-md-5">
                 <input type="password" class="form-control" name="password_repeated" placeholder="Mot de passe" value="<?php echo $password_repeated ?>" required>
