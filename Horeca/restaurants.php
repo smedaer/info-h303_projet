@@ -7,6 +7,40 @@ $actual = isset($_GET["actual"]) ? $_GET["actual"] : null;
 $newCom = isset($_POST['newCom']) ? $_POST['newCom'] : null;
 $newScore = isset($_POST['newScore']) ? $_POST['newScore'] : null;
 $newLabel = isset($_POST['newLabel']) ? $_POST['newLabel'] : null;
+
+function closedDays($var){
+    $res = "";
+    for ($i=0;$i<27;$i+=2){
+        if ($var[$i]){
+            switch(intval($i/4)){
+                case 0:
+                    $res.="lundi ";
+                    break;
+                case 1:
+                    $res.="mardi ";
+                    break;
+                case 2:
+                    $res.="mercredi ";
+                    break;
+                case 3:
+                    $res.="jeudi ";
+                    break;
+                case 4:
+                    $res.="vendredi ";
+                    break;
+                case 5:
+                    $res.="samedi ";
+                    break;
+                case 6:
+                    $res.="dimanche ";
+            }
+            if ($i%4==0){$res.="matin - ";}
+            else{$res.="aprem - ";}
+        }
+    }
+    return (strlen($res)>2 ? substr($res, 0, -2): $res);
+}
+
 if ($newCom){
     $newScore = intval($newScore);
     $statement = $db->prepare("INSERT INTO Descriptions(User_ID,Eta_ID) VALUES(:User_ID,:Eta_ID)");
@@ -36,14 +70,14 @@ if ($actual){
             <div class="col-md-7">
                 <div class="panel-info">
                     <div class="panel-heading">
-                        <h2 class="panel-title"> Informations sur le restaurant </h2>
+                        <h2 class="panel-title"> Informations sur le Restaurant </h2>
                     </div>
                     <div class="panel-body">
                         Prix moyen:&nbsp; <?php echo $res[0]["Prix"] ?> <br>
-                        Nombre maximum de couverts:&nbsp; <?php echo $res[0]["Couverts"] ?> <br>
-                        Emporter:&nbsp; <?php echo($res[0]["Emporter"]? "oui" : "non") ?> <br>
-                        Livraison:&nbsp; <?php echo($res[0]["Livraison"]? "oui" : "non") ?> <br>
-                        Jours de fermeture:&nbsp; <br>
+                        Nombre maximum de couverts:&nbsp; <?php echo $res[0]["Couverts"]; ?> <br>
+                        Emporter:&nbsp; <?php echo($res[0]["Emporter"]? "oui" : "non"); ?> <br>
+                        Livraison:&nbsp; <?php echo($res[0]["Livraison"]? "oui" : "non"); ?> <br>
+                        Jours de fermeture:&nbsp; <?php echo closedDays($res[0]["Fermeture"]); ?><br>
                     </div>
                 </div>
                 <div class="panel-info">

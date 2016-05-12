@@ -22,14 +22,24 @@ $Fumeur = isset($_POST["Fumeur"]) ? intval($_POST["Fumeur"]) : null;
 $Restauration = isset($_POST["Restauration"]) ? intval($_POST["Restauration"]) : null;
 $Chambres = isset($_POST["Chambres"]) ? intval($_POST["Chambres"]) : null;
 $Etoiles = isset($_POST["Etoiles"]) ? intval($_POST["Etoiles"]) : null;
+$openings = array(0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+$Fermeture = "";
+for ($i=0;$i<14;$i++){
+    if (isset($_POST["openings_".$i])){
+        $openings[$i] = $_POST['openings_' . $i];
+        $Fermeture.=($openings[$i]==='on'? '1' : '0').'/';
+    } else {$Fermeture.="0/";}
+}
+$Fermeture = substr($Fermeture,0,-1);
 $errorMsg = null;
 
 if ($modified){
+    var_dump($Fermeture);
     $statement = $db->prepare("UPDATE Etablissements SET AdRue=:AdRue, AdNumero=:AdNumero, AdCodePostal=:AdCodePostal, AdCity=:AdCity, Longitude=:Longitude, Latitude=:Latitude, Tel=:Tel, Site=:Site WHERE Eta_ID = :Eta_ID");
     $statement->execute(array("Eta_ID" => $Eta_ID, "AdRue" => $AdRue, "AdNumero" => $AdNumero, "AdCodePostal" => $AdCodePostal, "AdCity" => $AdCity, "Longitude" => $Longitude, "Latitude" => $Latitude, "Tel" => $Tel, "Site" => $Site));
     if ($actual === 'restaurant'){
         $statement = $db->prepare("UPDATE Restaurants SET Prix=:Prix, Couverts=:Couverts, Emporter=:Emporter, Livraison=:Livraison, Fermeture=:Fermeture WHERE Rest_ID=:Eta_ID");
-        $statement->execute(array("Eta_ID" => $Eta_ID,"Prix" => $Prix, "Couverts" => $Couverts, "Emporter" => $Emporter, "Livraison" => $Livraison, "Fermeture" => '10101010'));
+        $statement->execute(array("Eta_ID" => $Eta_ID,"Prix" => $Prix, "Couverts" => $Couverts, "Emporter" => $Emporter, "Livraison" => $Livraison, "Fermeture" => $Fermeture));
         // manque demi jours de fermeture
     }
     elseif ($actual === 'coffee'){
@@ -88,23 +98,59 @@ function entry($varName,$placeHolder,$var,$type,$size){
         echo '</div>';
     echo '</div>';
 }
-function yesOrNo($varName,$placeHolder){?>
+function yesOrNo($varName,$var, $placeHolder){?>
     <div class="radio form-group col-md-12 col-md-offset-1 required">
         <div class="col-md-4">
             <font style="font-size:130%;"><strong><?php echo $placeHolder;?></strong></font>
         </div>
         <div class="col-md-8">
             <label>
-                <input type="radio" name=<?php echo $varName;?> id="1" value="0" checked="">
+                <input type="radio" name=<?php echo $varName;?> id="1" value="0" <?php echo (!$var ? "checked=''" : null);?>>
                 Non
             </label>
             <label>
-                <input type="radio" name=<?php echo $varName;?> id="2" value="1">
+                <input type="radio" name=<?php echo $varName;?> id="2" value="1" <?php echo ($var ? "checked=''" : null);?>>
                 Oui
             </label>
         </div>
     </div>
 <?php }
+
+function entryClosedDays($var){
+    for ($i=0;$i<7;$i++) {
+        echo '<div class="checkbox col-md-12 col-md-offset-3">';
+            echo '<label>';
+                $day = "";
+                switch(intval($i)){
+                    case 0:
+                        $day.="lundi ";
+                        break;
+                    case 1:
+                        $day.="mardi ";
+                        break;
+                    case 2:
+                        $day.="mercredi ";
+                        break;
+                    case 3:
+                        $day.="jeudi ";
+                        break;
+                    case 4:
+                        $day.="vendredi ";
+                        break;
+                    case 5:
+                        $day.="samedi ";
+                        break;
+                    case 6:
+                        $day.="dimanche ";
+                }?>
+                <div class='col-md-4'><?php echo $day ?> </div>
+                <div class='col-md-3 col-md-offset-1'><input type='checkbox' name='openings_<?php echo $i*2; ?>' value='on' <?php echo ($var[$i*4]? "checked":null)?>> matin</div>
+                <div class='col-md-3 col-md-offset-1'><input type='checkbox' name='openings_<?php echo ($i*2)+1; ?>' value='on' <?php echo ($var[($i*4)+2]? "checked":null)?>> aprem</div>
+            </label>
+        </div><?php
+    }
+}
+
 ?>
 <body>
 
@@ -123,17 +169,17 @@ function yesOrNo($varName,$placeHolder){?>
             entry('Longitude','Longitude en d&eacute;cimal',$Longitude,'number','20');
             entry('Latitude','Latitude en d&eacute;cimal',$Latitude,'number','20');
             entry('Tel','T&eacute;l&eacute;phone',$Tel,'tel','20');
-            entry('Site internet','Site',$Site,'text','50');
+            entry('Site','Site internet',$Site,'text','50');
             if ($actual === 'restaurant'){
                 entry('Prix','Prix moyen',$Prix,'money','5');
                 entry('Couverts','Couverts maximum',$Couverts,'number','5');
-                yesOrNo('Emporter','Peut-on emporter?');
-                yesOrNo('Livraison','Livrez-vous?');
-                // demi jours de fermeture radio
+                yesOrNo('Emporter',$Emporter,'Peut-on emporter?');
+                yesOrNo('Livraison',$Livraison,'Livrez-vous?');
+                entryClosedDays($Fermeture);
             }
             elseif ($actual === 'coffee'){
-                yesOrNo('Fumeur','Espace fumeur?');
-                yesOrNo('Restauration','Server-vous &agrave; manger?');
+                yesOrNo('Fumeur',$Fumeur,'Espace fumeur?');
+                yesOrNo('Restauration',$Restauration,'Server-vous &agrave; manger?');
             }
             else{
                 entry('Prix','Prix moyen',$Prix,'money','5');
