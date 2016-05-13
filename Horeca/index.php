@@ -14,5 +14,7 @@ include "connection.php";?>
         <div class="col-md-4"><button class="hotels" onclick="location.href='addEta.php?actual=hotel'">Hotels</button></div>
         <div class="col-md-4"><button class="cafes" onclick="location.href='addEta.php?actual=coffee'">Cafes</button></div>
     <?php } ?>
+    <br></br><br></br><br></br><br></br><br></br><br></br>
+    <div class="col-md-4 col-md-offset-4"><button onclick="location.href='requests.php'"><strong>Recherches sp&eacute;ciales</strong></button></div>
 </div>
 <?php include "footer.php"; ?>

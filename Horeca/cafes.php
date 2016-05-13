@@ -61,10 +61,15 @@ if ($actual){
                     </div>
                     <div class="panel-body">
                         <?php
-                        $statement = $db->prepare("SELECT DISTINCT Label FROM Labels WHERE EXISTS(SELECT * FROM Descriptions WHERE Des_ID = Lab_ID AND Eta_ID = :actual)");
+                        $statement = $db->prepare("SELECT Label FROM Labels WHERE EXISTS(SELECT * FROM Descriptions WHERE Des_ID = Lab_ID AND Eta_ID = :actual)");
                         $statement->execute(array("actual" => $actual));
-                        while($label = $statement->fetch(PDO::FETCH_ASSOC)["Label"]){echo "#".$label."&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";}
-                        if(isset($_SESSION["User_ID"])){?>
+                        $labelsArray = array();
+                        while($label = $statement->fetch(PDO::FETCH_ASSOC)["Label"]){(isset($labelsArray[$label])? $labelsArray[$label]++ : $labelsArray[$label]=1);}
+                        $keys = array_keys($labelsArray);
+                        $length = count($labelsArray);?>
+                        <?php for ($i=0;$i<$length;$i++){?>
+                            <p style="font-size:1<?php echo $labelsArray[$keys[$i]]; ?>0%">#<?php echo $keys[$i];?></p><?php } ?>
+                        <?php if(isset($_SESSION["User_ID"])){?>
                             <br><br>
                             <form action="<?php echo "?actual=".$actual; ?>" method="post" class="form-horizontal">
                                 <input class="form-control" name="newLabel" placeholder="Ajouter un label" value="<?php echo $newLabel; ?>">
@@ -171,7 +176,6 @@ if ($actual){
     </thead>
     <tbody>
         <?php
-        // si tu arrives à mettre ces deux requêtes en une, n'hésite pas!
         $statement = $db->prepare("SELECT Eta_ID,AdCodePostal FROM Etablissements WHERE EXISTS (SELECT * FROM Cafes WHERE Cafe_ID = Eta_ID)");
         $statement->execute(array());
         $index = 1;
