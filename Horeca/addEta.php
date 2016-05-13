@@ -79,7 +79,7 @@ function yesOrNo($varName,$placeHolder){?>
 
 function entryClosedDays($var){
     for ($i=0;$i<7;$i++) {
-        echo '<div class="checkbox col-md-12 col-md-offset-3">';
+        echo '<div class="checkbox col-md-offset-3">';
             echo '<label>';
                 $day = "";
                 switch(intval($i)){
@@ -134,6 +134,7 @@ function entryClosedDays($var){
                 entry('Couverts','Couverts maximum',$Couverts,'number','5');
                 yesOrNo('Emporter','Peut-on emporter?');
                 yesOrNo('Livraison','Livrez-vous?');
+                echo '<div class="col-md-offset-4"><font style="font-size:130%;"><strong>Jours de fermeture</strong></font></div>';
                 entryClosedDays($openings);
             }
             elseif ($actual === 'coffee'){
