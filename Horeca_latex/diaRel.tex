@@ -1,0 +1,31 @@
+\section{Modèle relationnel}
+
+\noindent Etablissements(\underline{Eta\_ID}, AdRue, AdNuméro, AdVille, Tel, Latitude, Longitude, Site, Admin)\\
+\indent Admin référence Users.User\_ID\\
+Restaurants(\underline{Res\_ID}, Couverts, Prix, Fermeture, Emporter, Livraison)\\
+\indent Restaurant.Res\_ID référence Etablissements.Eta\_ID\\
+Bars(\underline{Bar\_ID}, Fumeur, Restauration)\\
+\indent Bars.Bar\_ID référence Etablissements.Eta\_ID\\
+Hotels(\underline{Hot\_ID}, Étoiles, Chambres, Prix)\\
+\indent Hotels.Hot\_ID référence Établissement.Eta\_ID\\
+Users(\underline{User\_ID}, Email, PSWD, Creation\_Date, Is\_Admin)\\
+Ajoute(\underline{Des\_ID ,User\_ID})\\
+\indent Des\_ID référence Descriptions.Des\_ID\\
+\indent User\_ID référence Users.User\_ID\\
+Gére(\underline{Eta\_ID, User\_ID})\\
+\indent Eta\_ID référence Etablissements.Eta\_ID\\
+\indent User\_ID référence Users.User\_ID\\
+Descriptions(\underline{Des\_ID}, Eta\_ID, User\_ID)\\
+\indent Descriptions.Eta\_ID référence Etablissements.Eta\_ID\\
+\indent Descriptions.User\_ID référence Users.User\_ID\\
+Labels(\underline{Lab\_ID}, Label)\\
+\indent Labels.Lab\_ID référence Descriptions.Des\_ID\\
+Labellise(\underline{Eta\_ID,Labels})\\
+\indent Eta\_ID référence Établissements.Eta\_ID\\
+\indent Labels référence Labels.SSN\\
+Commentaires(\underline{Com\_ID}, Com, Score, Creation\_Date, SID)\\
+\indent Commentaires.Com\_ID référence Descriptions.Des\_ID\\
+Commente(\underline{Eta\_ID,Commentaires})\\
+\indent Eta\_ID référence Établissements.Eta\_ID\\
+\indent Commentaires référence Commentaires.SSN\\
+\pagebreak

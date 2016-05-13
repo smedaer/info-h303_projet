@@ -1,0 +1,26 @@
+\section{Instructions d'installation de l'application}
+\noindent L'application est un site Web. Il a été développé sur base de logiciels libres. Une version temporaire en ligne est disponible à l'adresse suivante: \textit{http://51.255.39.146/info/www/} . Les deux administrateurs sont Fred et Boris. Leurs identifiants et adresses mail pour accéder à leur compte respectif sont Fred@gmail.com et Boris@gmail.com. De même, leurs mots de passe sont Fredpswd et Borispswd.\\
+Les informations qui suivent permette une installation local. Cette installation requiert au minimum quatre composants. Ci-dessous sont listés le(s) composant(s) qui ont été utilisé(s) pour l'implémentation de l'application.
+\begin{itemize}
+    \item système d'exploitation: Windows ou distribution Unix
+    \item un serveur web: Apache
+    \item un système de gestion de bases de données: mySQL
+    \item un langage permettant la génération des pages web et la communication avec le système de gestion de bases de données: PHP
+\end{itemize}
+
+\noindent Ci-dessous sont décrites les différentes étapes à suivre. Des exemples sont ensuite donnés pour chaque étape pour le système d'exploitation Linux et les composants cités ci-dessus.
+\begin{itemize}
+    \item Créer la base de données à partir du fichier \textit{DB\_creation.txt} dans le répertoire \textit{db} ou en important le fichier \textit{horeca.sql} dans mySQL.
+    \item Copier le dossier \textit{www/} dans le répertoire localhost du système d'exploitation.
+    \item Ouvrir un navigateur et accèder au répertoire localhost dans la bar de recherche.
+\end{itemize}
+
+\begin{verbatim}
+1. shell> cat DB_creation.txt | mysql -u<username> -p<pswd> ou shell> mysql
+   -u<username> -p<pswd> db_name < horeca.sql
+2. shell> cp -r Horeca/ /var/www/
+3. localhost
+   127.0.0.1
+   <pc_name>
+    
+\end{verbatim}

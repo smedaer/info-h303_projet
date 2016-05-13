@@ -1,0 +1,84 @@
+\section{Requêtes}
+\noindent Les requêtes suivantes concerne la base de donnée Horeca. Les quatre première requêtes sont traduites en algèbre relationnelle. De plus, toutes les requêtes sont traduites en SQL.\\
+Il est à noter que un utilisateur qui apprécie un étabalissement est un utilisateur qui a accordé un score d'au moins quatre à cette établissement dans son commentaire.
+\begin{itemize}
+    \item R1 : Tous les utilisateurs qui apprécient au moins 3 établissements que l’utilisateur "Brenda" apprécie.
+    \item R2 : Tous les établissements qu’apprécie au moins un utilisateur qui apprécie tous les établissements que
+"Brenda" apprécie
+    \item R3 : Tous les établissements pour lesquels il y a au plus un commentaire.
+    \item R4 : La liste des administrateurs n’ayant pas commenté tous les établissements qu’ils ont crées.
+    \item R5 : La liste des établissements ayant au minimum trois commentaires, classée selon la moyenne des scores
+attribués.
+    \item R6 : La liste des labels étant appliqués à au moins 5 établissements, classée selon la moyenne des scores des
+établissements ayant ce label.
+\end{itemize}
+
+\noindent Afin que les requêtes soient claires et lisibles, les différentes tables sont identifiées comme suit:
+\begin{center}
+\begin{tabular}{r l r l r l}
+    \textit{Users} & U & \textit{Etablissements} & E & \textit{Restaurants} & R \\
+    \textit{Cafes} & CA & \textit{Descriptions} & D & \textit{Commentaires} & CO\\
+    \textit{Labels} & L & & & &\\
+\end{tabular}
+\end{center}
+N.B.: Le "au moins" dans la requête numéro 2 est ambigu. Tous les établissements de tous les utilisateurs qui apprécie tous les établissements que "Brenda" apprécie sont listés par la requête.
+\subsection{Algèbre relationnelle}
+\begin{itemize}
+    \item R1 :\\
+    AllBrendaLike $\leftarrow \pi_{Eta\_ID} \left(D\bowtie_{Des\_ID=Com\_ID\land Score>3\land User\_ID='Brenda'}CO \right)$\\
+    Result $\leftarrow \pi_{User\_ID}\Big(\sigma_{User\_ID=User\_ID_3\land Eta\_ID\neq Eta\_ID_2\land Eta\_ID_2\neq Eta\_ID_3}$\\
+    $\big(\alpha_{User\_ID:User\_ID_3,Eta\_ID:Eta\_ID_3}\left(AllBrendaLike\right)*$\\
+    $\alpha_{Eta\_ID\neq Eta\_ID_2\land Id=Id_2}\left(AllBrendaLike*\alpha_{User\_ID:User\_ID_2,Eta\_ID:Eta\_ID_2}\left(AllBrendaLike\right)\right)\big)\Big)$
+    
+    \item R2 :\\
+    AllUserLike $\leftarrow \pi_{User\_ID, Eta\_ID} \left( D\bowtie_{Des\_ID=Com\_ID\land Score>3\land User\_ID\ne'Brenda'}CO \right)$\\
+    AllBrendaLike $\leftarrow \pi_{Eta\_ID} \left(D\bowtie_{Des\_ID=Com\_ID\land Score>3\land User\_ID='Brenda'}CO \right)$\\
+    UserMatch $\leftarrow$ AllUserLike/AllBrendaLike\\
+    LikedEtab $\leftarrow D\bowtie_{Des\_ID=Com\_ID\land Score>3}CO\\$
+    EtabAndUserMatch $\leftarrow$ LikedEtab $\bowtie_{User\_ID=User\_ID}$ EtabAndUserMatch\\
+    Result $\leftarrow \pi_{Eta\_ID}$(EtabAndUserMatch)
+    \item R3 :\\
+    AllEtab $\leftarrow \pi_{Eta\_ID}(E)$\\
+    COM $\leftarrow D\bowtie_{Des\_ID=Com\_ID}CO$\\
+    More1Com $\leftarrow \sigma_{User\_ID\ne User\_ID_2\lor Creation\_Date\ne Creation\_Date_2}\Big(\pi_{User\_ID, Eta\_ID, Creation_date}\left(COM\right)$\\
+    $*\alpha_{User\_ID:User\_ID_2, Creation\_Date:Creation\_Date_2}\left(\pi_{User\_ID, Eta\_ID, Creation_date}\left(COM\right)\right)\Big)$\\
+    EtabMore1Com $\leftarrow \pi_{Eta\_ID}($More1Com$)$\\
+    Result $\leftarrow$ AllEtab - EtabMore1Com
+    \item R4 :\\
+    AllCom $\leftarrow \pi_{User\_ID, Eta\_ID}\left(D\right)$\\
+    AllEtab $\leftarrow \pi_{Admin,Eta\_ID}\left(E\right)$\\
+    AdminNoComment $\leftarrow$ AllEtab - AllCom\\
+    Result $\leftarrow \pi_{User\_ID}($AdminNoComment$)$
+\end{itemize}
+\subsection{SQL}
+\noindent Par manque de temps, toutes les requêtes n'ont pas pues être traduite en SQL.
+\begin{verbatim}
+-R3:
+(SELECT eta_id
+FROM Descriptions, Commentaires
+WHERE com_id = des_id
+GROUP BY eta_id
+HAVING COUNT(com_id) < 2)
+UNION
+(SELECT eta_id
+FROM etablissements E
+WHERE NOT EXISTS (SELECT *
+    FROM Descriptions D, Commentaires
+    WHERE com_id = des_id AND E.eta_id = D.eta_id))
+    
+-R5:
+SELECT eta_id, AVG(score) AS note
+FROM Descriptions D, Commentaires C
+WHERE D.des_id = C.com_id
+GROUP BY eta_id
+HAVING COUNT(eta_id) > 2
+ORDER BY note DESC
+
+-R6:
+SELECT label
+FROM (SELECT DISTINCT eta_id, label
+    FROM Labels, Descriptions
+    WHERE des_id = lab_id) L
+GROUP BY label
+HAVING COUNT(label) > 4
+\end{verbatim}
