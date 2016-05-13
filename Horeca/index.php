@@ -1,10 +1,5 @@
-<?php include "header.php"; include "connection.php";
-$delete = isset($_POST['delete']) ? $_POST['delete'] : null;
-if ($delete){
-    $statement = $db->prepare("DELETE FROM Etablissements E JOIN Restaurants R ON R.Rest_ID = E.Eta_ID WHERE E.Eta_ID = :Eta_ID");
-    $statement->execute(array("Eta_ID" => $delete));
-}
-?>
+<?php include "header.php";
+include "connection.php";?>
 
 <body>
 <div class="jumbotron col-md-12">
@@ -18,16 +13,6 @@ if ($delete){
         <div class="col-md-4"><button class="restaurants" onclick="location.href='addEta.php?actual=restaurant'">Restaurants</button></div>
         <div class="col-md-4"><button class="hotels" onclick="location.href='addEta.php?actual=hotel'">Hotels</button></div>
         <div class="col-md-4"><button class="cafes" onclick="location.href='addEta.php?actual=coffee'">Cafes</button></div>
-        <br></br><br></br><br></br><br></br><br></br><br></br>
-        <p align="center"><strong>Supprimer un &eacute;tablissement</strong></p>
-        <form action="#" method="post" class="form-horizontal">
-            <div class="col-md-6 col-md-offset-2">
-                <input class="form-control" name="delete" placeholder="&Eacute;tablissement" value="<?php echo $delete; ?>">
-            </div>
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-primary">Supprimer</button>
-            </div>
-        </form>
     <?php } ?>
 </div>
 <?php include "footer.php"; ?>
